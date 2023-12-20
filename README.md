@@ -1,4 +1,4 @@
-Code for TD and ANCCR simulations in Qian et al., 2023
+Code for TD and ANCCR simulations in Qian, Burrell et al., 2023
 
 ## Folders
 
