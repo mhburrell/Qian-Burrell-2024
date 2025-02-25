@@ -29,8 +29,8 @@ params.events.ISI(end) = 0;
 %replace -99 with CS identity and 0 with reward or null inside of trialGenerator
 max_isi_state = max(params.states.ISI);
 
-post_reward = 8;
-pre_reward = 2.5;
+post_reward = 4;
+pre_reward = 2;
 wait = post_reward + pre_reward;
 params.states.ITIwait = (max_isi_state:max_isi_state+floor(wait/params.dt))';
 params.events.ITIwait = ones(numel(params.states.ITIwait),1);

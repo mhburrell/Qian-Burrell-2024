@@ -1,5 +1,5 @@
 %run_belief_state_model
-discount_factor = 0.5:0.025:0.975;
+discount_factor = 0.925;
 parfor i = 1:25
     params = struct();
     params.alpha = 0.1;
@@ -7,12 +7,12 @@ parfor i = 1:25
     wait_time = rand()*20;
     pause(wait_time)
 
-    trial_table = parquetread('simulated_trials.parquet');
+    trial_table = parquetread('simulated_extinction_trials.parquet');
     trial_table = trial_table(trial_table.rep==i,:);
 
     for k = 1:length(discount_factor)
         params.gamma = discount_factor(k);
-        for j = 1:3
+        for j = 4:4
             data = trial_table(trial_table.rep==i&trial_table.testgroup==j,:);
             condition_only = data(data.phase==1,:);
             test_only = data(data.phase==2,:);
@@ -20,8 +20,8 @@ parfor i = 1:25
             T = calculate_transition(condition_only.states,19);
             O = calculate_observation(condition_only.events,condition_only.states,19,5);
 
-            T_test = calculate_transition(test_only.states,19);
-            O_test = calculate_observation(test_only.events,test_only.states,19,5);
+            T_test = T;
+            O_test = O;
 
             params.T_test = T_test;
             params.O_test = O_test;

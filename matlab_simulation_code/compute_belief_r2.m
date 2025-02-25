@@ -1,4 +1,4 @@
-pds = parquetDatastore('C:\Users\Mark\Dev\LocalClones\Qian-2023-Contingency\r_code\for_belief_r2','IncludeSubfolders',true);
+pds = parquetDatastore('C:\Users\Mark\Documents\R-dev\Projects\Revision_Code_Publish\for_belief_r2','IncludeSubfolders',true);
 file_list = pds.Files;
 conditions = {'conditioning','degradation','cue-c'};
 results_table = table;

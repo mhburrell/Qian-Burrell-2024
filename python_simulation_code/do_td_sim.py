@@ -12,7 +12,7 @@ import itertools
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-data_file = "C:\\Users\\Mark\\Dev\\LocalClones\\Qian-2023-Contingency\\matlab_code\\simulated_trials.parquet"
+data_file = "simulated_trials.parquet"
 
 
 # 1: CSC, no ITI representation

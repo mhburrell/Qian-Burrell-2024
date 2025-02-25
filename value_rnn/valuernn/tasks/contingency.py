@@ -8,8 +8,19 @@ Created on Mon Nov 21 15:31:01 2022
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-from .trial import Trial, get_itis
+from .trial import Trial
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+def get_itis_fixed(self, ntrials=None):
+    ntrials = ntrials if ntrials is not None else self.ntrials
+    
+    itis = []
+    while len(itis) < ntrials:
+        iti = np.random.geometric(p=1/12)-1
+        if 8 <= iti <= 20:
+            itis.append(iti)
+    return self.iti_min + itis
+
 
 class Contingency(Dataset):
     def __init__(self, 
@@ -149,7 +160,7 @@ class Contingency(Dataset):
             self.cues = cues
         
         # ITI per trial
-        self.ITIs = get_itis(self) if ITIs is None else ITIs
+        self.ITIs = get_itis_fixed(self) if ITIs is None else ITIs
         
         # make trials
         self.trials = [self.make_trial(cue, iti) for cue, iti in zip(self.cues, self.ITIs)]

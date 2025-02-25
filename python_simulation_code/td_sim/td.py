@@ -2,7 +2,9 @@
 #%% 
 import numpy as np
 from numba import njit
-
+import warnings
+from numba.core.errors import NumbaPerformanceWarning
+warnings.filterwarnings("ignore", category=NumbaPerformanceWarning)
 @njit
 def temporal_difference_learning(states,rewards,alpha,gamma,initial_weights):
     #model_switch is 1,2 or 3

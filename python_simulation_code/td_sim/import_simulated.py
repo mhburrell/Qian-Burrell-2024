@@ -85,3 +85,62 @@ def shape_data_csc(df,threshold=20):
 
     return csc_matrix, context_matrix, rewards
 
+def gaussianbasisfun(y, mu, sigma):
+    return (1 / np.sqrt(2 * np.pi)) * np.exp(-(y - mu)**2 / (2 * sigma**2))
+
+def microstimulusfun(yt, mu, sigma):
+    return gaussianbasisfun(yt, mu, sigma) * yt    
+
+def shape_data_microstimuli(df,tau=0.95,n_stimuli=20,sigma=0.08):
+    #convert events to a (t x (n_cues*20)) microstimuli matrix and 1 x n_cues reward vector
+    t = df.shape[0]
+    events = df['events'].values
+    #convert to int
+    events = events.astype(int)
+    X = np.eye(5)[events-1]
+
+    #reward is the second column of X
+    rewards = X[:,1]
+    #cues are the third, fourth and fifth columns of X
+    cues = X[:,2:5]
+
+    n_cues = cues.shape[1]
+    n_states = n_cues*n_stimuli
+
+    #initialize microstimuli matrix
+    microstimuli_matrix = np.zeros((t,n_states))
+
+    #generate stimulus trace
+    max_time = t * 0.2
+    time = np.linspace(0,max_time,t)
+    stimtrace = 1 * tau ** time
+
+    mus = np.linspace(1,0,n_stimuli)
+
+    microstimuli = microstimulusfun(stimtrace[:,np.newaxis],mus,sigma)
+
+    # #for each time cue is 1, insert microstimuli into microstimuli_matrix
+    for i in range(n_cues):
+        for tt in range(t):
+            if cues[tt,i] == 1:
+                horizon = t - tt
+                microstimuli_matrix[tt:t,i*n_stimuli:(i+1)*n_stimuli] = microstimuli[:horizon]
+
+    # cue_indices = np.where(cues == 1)
+    # for i, tt in zip(*cue_indices):
+    #     horizon = t - tt
+    #     microstimuli_matrix[tt:t, i * n_stimuli:(i + 1) * n_stimuli] = microstimuli[:horizon]            
+
+    #generate context_vector
+    #if phase = 1 then context = 1
+    #otherwise context = testgroup
+    context_vector = np.ones(t)
+    context_vector[df['phase'].values==2] = df['testgroup'].values[df['phase'].values==2]
+
+    #convert to int
+    context_vector = context_vector.astype(int)
+
+    #convert to one hot encoding
+    context_matrix = np.eye(3)[context_vector-1]
+
+    return microstimuli_matrix, context_matrix, rewards  

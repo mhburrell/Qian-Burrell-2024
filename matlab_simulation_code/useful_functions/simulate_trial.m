@@ -3,8 +3,13 @@ function [states, events] = simulate_trial(trialType,params)
 %This function generates individual trials, including trailing ITI time
 ITIfinalState = max(params.states.ITIwait);
 %select a random number from an exponential distribution with mean ITI
-ITIlength = exprnd(params.ITImean);
-nITI = ceil(ITIlength/params.dt); 
+%ITIlength = exprnd(params.ITImean);
+ITIlength = exprnd(6);
+while ITIlength < 4 || ITIlength > 10
+    ITIlength = exprnd(6);
+end
+ITIlength = ITIlength-4;
+nITI = ceil(ITIlength/params.dt);
 ITIs = repmat(ITIfinalState,1,nITI);
 ITIe = ones(1,nITI);
 

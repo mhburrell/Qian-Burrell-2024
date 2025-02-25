@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='valuernn',
-    version = '0.1.18',
+    version = '0.1.20',
     description = 'ValueRNN',
     author = 'Jay Hennig',
     packages = find_packages(),
